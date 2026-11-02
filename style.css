@@ -1,0 +1,11 @@
+body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+@media (width >= 768px)  {
+    body {
+        background: #000;
+    }
+}
