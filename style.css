@@ -1,11 +1,23 @@
+:root {
+    --ink: #5296c9; 
+    --paper: #fff; 
+    --accent: #6febc2; 
+}
+
 body {
     display: flex;
+    background: var(--accent);
     flex-wrap: wrap;
     gap: 1rem;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 @media (width >= 768px)  {
     body {
-        background: #000;
+        background: var(--ink);
     }
 }
