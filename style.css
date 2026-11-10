@@ -1,15 +1,29 @@
 :root {
-  --primary-color: #eba925;
+  --primary-color: hwb(40 4% 11%);
   --text-color: #1f2937;
   --bg-color: #f9fafb;
   --card-bg: #ffffff;
   --max-width: 1100px;
+  --border-top: #e5e7eb;
+  --shsdow1:  rgba(0, 0, 0, 0.05);
+  --shadow2:   rgba(0, 0, 0, 0.1);
+
+  /* Fluid spacing: shrinks on small screens, grows on large ones */
+  --page-pad: clamp(1rem, 4vw, 2rem);
+  --card-pad: clamp(1rem, 4vw, 2.5rem);
 }
 
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 9rem; /* keeps section titles clear of the sticky header */
 }
 
 body {
@@ -17,54 +31,85 @@ body {
   color: var(--text-color);
   background-color: var(--bg-color);
   line-height: 1.6;
+  overflow-x: hidden; /* safety net against sideways scrolling */
 }
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- Header ---------- */
 
 .header {
   background-color: var(--card-bg);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px var(--shadow2);
   position: sticky;
   top: 0;
   z-index: 100;
+
+  /* Mobile: brand on top, links underneath */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem var(--page-pad);
+}
+
+.brand {
+  text-align: center;
+}
+
+.brand h1 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.brand p {
+  font-size: 0.8rem;
 }
 
 nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  width: 100%;
   max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 1rem 2rem;
 }
 
 nav ul {
   display: flex;
+  flex-wrap: wrap; /* links wrap instead of overflowing */
+  justify-content: center;
   list-style: none;
-  gap: 2rem;
+  gap: 0.25rem 1.25rem;
 }
 
 nav a {
+  display: inline-block;
+  padding: 0.25rem 0;
   text-decoration: none;
   color: var(--text-color);
   font-weight: 500;
   transition: color 0.2s;
 }
 
-nav a:hover {
+nav a:hover,
+nav a:focus-visible {
   color: var(--primary-color);
 }
+
+/* ---------- Main ---------- */
 
 main {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: clamp(1.25rem, 5vw, 3rem) var(--page-pad);
 }
 
 section {
   background-color: var(--card-bg);
-  padding: 2.5rem;
+  padding: var(--card-pad);
   border-radius: 12px;
-  margin-bottom: 2.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  margin-bottom: clamp(1.25rem, 4vw, 2.5rem);
+  box-shadow: 0 4px 6px -1px var(--shsdow1);
 }
 
 section h2 {
@@ -72,48 +117,115 @@ section h2 {
   color: var(--primary-color);
 }
 
+/* ---------- About ---------- */
+
 .about__container {
   display: flex;
-  gap: 3rem;
+  flex-direction: column; /* mobile: photo above text */
   align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.about__img {
+  flex-shrink: 0;
 }
 
 .about__img img {
-  width: 200px;
-  display: block;
-  justify-self: center;
+  /* Fluid size: never wider than the space available, never above 200px */
+  width: clamp(120px, 40vw, 200px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   margin: 0 auto;
-  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid var(--primary-color);
+}
+
+.about__content {
+  min-width: 0; /* lets long text wrap inside a flex layout */
+  overflow-wrap: anywhere; /* breaks the long email address */
 }
 
 .about__content p {
   margin-bottom: 0.5rem;
 }
 
+/* ---------- Contact ---------- */
+
 #contact a {
   display: inline-block;
+  max-width: 100%;
   margin-top: 1rem;
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-color); /* better contrast on amber than white */
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
   text-decoration: none;
   font-weight: 500;
+  overflow-wrap: anywhere;
+  text-align: center;
   transition: opacity 0.2s;
 }
 
-#contact a:hover {
+#contact a:hover,
+#contact a:focus-visible {
   opacity: 0.9;
 }
 
+/* ---------- Footer ---------- */
+
 footer {
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem var(--page-pad);
   background-color: var(--card-bg);
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-top);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Tablet and up ---------- */
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  .header {
+    flex-direction: row; /* brand left, links right */
+    justify-content: space-between;
+    align-items: center;
+    /* keeps content aligned with the 1100px main area on wide screens */
+    padding-inline: max(var(--page-pad), calc((100% - var(--max-width)) / 2 + var(--page-pad)));
+  }
+
+  .brand {
+    text-align: left;
+  }
+
+  nav {
+    width: auto;
+  }
+
+  nav ul {
+    justify-content: flex-end;
+    gap: 2rem;
+  }
+
+  .about__container {
+    flex-direction: row;
+    justify-content: space-around;
+    text-align: left;
+    gap: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  nav a,
+  #contact a {
+    transition: none;
+  }
 }
